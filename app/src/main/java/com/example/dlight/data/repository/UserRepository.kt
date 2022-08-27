@@ -1,6 +1,6 @@
-package com.example.dlight.domain.repository
+package com.example.dlight.data.repository
 
-import com.example.dlight.domain.Result
+import com.example.dlight.data.Result
 
 interface UserRepository {
     suspend fun fetchUserByUserName(userName: String) : Result
