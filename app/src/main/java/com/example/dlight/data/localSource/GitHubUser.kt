@@ -16,7 +16,7 @@ data class GitHubUser(
     @SerializedName("created_at")
     val createdAt: String = "",
     @SerializedName("email")
-    val email: String = "",
+    val email: String? = null,
     @SerializedName("events_url")
     val eventsUrl: String = "",
     @SerializedName("followers")
@@ -38,11 +38,11 @@ data class GitHubUser(
     @SerializedName("id")
     val id: Int = 0,
     @SerializedName("location")
-    val location: String = "",
+    val location: String? = null,
     @SerializedName("login")
-    val login: String = "",
+    val login: String? = null,
     @SerializedName("name")
-    val name: String = "",
+    val name: String? = null,
     @SerializedName("node_id")
     val nodeId: String = "",
     @SerializedName("organizations_url")
@@ -75,8 +75,8 @@ fun GitHubUser.asUser()= User(
     0,
     this.url,
     this.avatarUrl,
-    "",//this.email,
-    this.location,
+    this.email.toString(),
+    this.location.toString(),
     this.login,
-    this.name
+    this.name.toString()
 )
