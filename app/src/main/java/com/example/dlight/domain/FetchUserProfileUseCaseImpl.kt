@@ -8,9 +8,5 @@ import timber.log.Timber
 class FetchUserProfileUseCaseImpl(private val userRepository: UserRepository): FetchUserProfileUseCase {
     override suspend fun invoke(userName: String): Result {
         return userRepository.fetchUserByUserName(userName)
-//        return when(result){
-//            is Result.Error -> null
-//            is Result.Success<*> -> result.result as User
-//        }
     }
 }

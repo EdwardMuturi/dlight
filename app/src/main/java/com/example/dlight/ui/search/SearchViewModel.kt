@@ -23,7 +23,7 @@ class SearchViewModel(private val fetchUserProfileUseCase: FetchUserProfileUseCa
             val userResult= fetchUserProfileUseCase(userName)
             when(userResult){
                 is Result.Error ->  _searchUserUiState.update { it.copy(isLoading = false, errorMessage = "User record not found in DB!") }
-                is Result.Success<*> ->  _searchUserUiState.update { it.copy(user= userResult.result as User, isLoading = false) }
+                is Result.Success ->  _searchUserUiState.update { it.copy(user= userResult.result as User, isLoading = false) }
             }
         }
     }
