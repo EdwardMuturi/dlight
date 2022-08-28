@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Dlight</string>
+    <string name="search_user">Search user</string>
 </resources>

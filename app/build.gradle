@@ -73,6 +73,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     implementation("com.google.code.gson:gson:$gson_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version")
+
 //    Timber
     implementation("com.jakewharton.timber:timber:5.0.1")
 //    Navigation
@@ -84,8 +86,10 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation("androidx.room:room-ktx:$room_version")
+    //    Swipe to refresh
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.23.1")
+
     //Chuck
-    implementation("com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version")
     debugImplementation("com.github.chuckerteam.chucker:library:$chucker_version")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:$chucker_version")
 
@@ -112,7 +116,4 @@ dependencies {
     testImplementation "io.insert-koin:koin-test:$koin_version"
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-
-
-
 }

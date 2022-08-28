@@ -77,6 +77,6 @@ fun GitHubUser.asUser()= User(
     this.avatarUrl,
     this.email.toString(),
     this.location.toString(),
-    this.login,
+    this.login.toString(),
     this.name.toString()
 )
