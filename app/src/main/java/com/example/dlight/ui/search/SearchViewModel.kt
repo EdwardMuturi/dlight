@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class SearchViewModel(private val fetchUserProfileUseCase: FetchUserProfileUseCase) : ViewModel() {
 
@@ -31,14 +30,18 @@ class SearchViewModel(private val fetchUserProfileUseCase: FetchUserProfileUseCa
                 }
                 is Result.Success -> {
                     val user = userResult.result as User
-
                     val userProfileUiState= UserProfileUiState(
-                        avatar= user.avatarUrl,
-                       name= user.name,
-                        userName= user.userName,
-                        blog = user.url
+                        user.avatarUrl,
+                        user.name,
+                        user.userName,
+                        user.bio.split("\n").toString().removeSurrounding("[", "]"),
+                        user.company,
+                        user.blog,
+                        user.followers.toString(),
+                        user.following.toString(),
+                        user.repositories.toString()
                     )
-                    Timber.e(user.toString())
+
                     _searchUserUiState.update {
                         it.copy(userProfileUiState= userProfileUiState, isLoading = false)
                     }

@@ -15,10 +15,12 @@ data class UserProfileUiState(
     val avatar: String= String(),
     val name: String= String(),
     val userName: String= String(),
+    val bio: String= String(),
     val organization: String= String(),
     val blog: String= String(),
-    val followers: Int= 0,
-    val following: Int= 0,
+    val followers: String= String(),
+    val following: String= String(),
+    val repositories: String= String(),
 )
 
 @Composable

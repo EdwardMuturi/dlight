@@ -12,29 +12,29 @@ data class GitHubUser(
     @SerializedName("blog")
     val blog: String = "",
     @SerializedName("company")
-    val company: String = "",
+    val company: String?= null,
     @SerializedName("created_at")
-    val createdAt: String = "",
+    val createdAt: String?= null,
     @SerializedName("email")
     val email: String? = null,
     @SerializedName("events_url")
-    val eventsUrl: String = "",
+    val eventsUrl: String?= null,
     @SerializedName("followers")
     val followers: Int = 0,
     @SerializedName("followers_url")
-    val followersUrl: String = "",
+    val followersUrl: String?= null,
     @SerializedName("following")
     val following: Int = 0,
     @SerializedName("following_url")
-    val followingUrl: String = "",
+    val followingUrl: String?= null,
     @SerializedName("gists_url")
-    val gistsUrl: String = "",
+    val gistsUrl: String?= null,
     @SerializedName("gravatar_id")
-    val gravatarId: String = "",
+    val gravatarId: String?= null,
     @SerializedName("hireable")
     val hireable: Boolean = false,
     @SerializedName("html_url")
-    val htmlUrl: String = "",
+    val htmlUrl: String?= null,
     @SerializedName("id")
     val id: Int = 0,
     @SerializedName("location")
@@ -44,39 +44,48 @@ data class GitHubUser(
     @SerializedName("name")
     val name: String? = null,
     @SerializedName("node_id")
-    val nodeId: String = "",
+    val nodeId: String?= null,
     @SerializedName("organizations_url")
-    val organizationsUrl: String = "",
+    val organizationsUrl: String?= null,
     @SerializedName("public_gists")
     val publicGists: Int = 0,
     @SerializedName("public_repos")
-    val publicRepos: Int = 0,
+    val publicRepos: Int,
     @SerializedName("received_events_url")
-    val receivedEventsUrl: String = "",
+    val receivedEventsUrl: String?= null,
     @SerializedName("repos_url")
-    val reposUrl: String = "",
+    val reposUrl: String?= null,
     @SerializedName("site_admin")
     val siteAdmin: Boolean = false,
     @SerializedName("starred_url")
-    val starredUrl: String = "",
+    val starredUrl: String?= null,
     @SerializedName("subscriptions_url")
-    val subscriptionsUrl: String = "",
+    val subscriptionsUrl: String?= null,
     @SerializedName("twitter_username")
-    val twitterUsername: String = "",
+    val twitterUsername: String?= null,
     @SerializedName("type")
-    val type: String = "",
+    val type: String?= null,
     @SerializedName("updated_at")
-    val updatedAt: String = "",
+    val updatedAt: String?= null,
     @SerializedName("url")
-    val url: String = ""
+    val url: String?= null
 )
 
 fun GitHubUser.asUser()= User(
     0,
-    this.url,
+    this.url ?: "",
     this.avatarUrl,
-    this.email.toString(),
-    this.location.toString(),
-    this.login.toString(),
-    this.name.toString()
+    this.location?: "",
+    this.login?: "",
+    this.name?: "",
+    this.blog,
+    this.company?: "",
+    this.bio,
+    this.followers,
+    this.following,
+    this.publicRepos,
+    this.reposUrl?: "",
+    this.followingUrl?: "",
+    this.followersUrl?: "",
+    this.organizationsUrl?: "",
 )

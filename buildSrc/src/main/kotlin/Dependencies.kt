@@ -50,7 +50,7 @@ object Versions {
     const val dokka = "1.4.0-rc-24"
     const val gradleVersionsPlugin = "0.29.0"
     const val slackKeeper = "0.7.0"
-    const val apolloVersion = "2.2.0"
+    const val apolloVersion = "3.5.0"
 
     // tests
     const val junit = "4.13"
@@ -73,7 +73,7 @@ object BuildPlugins {
     //All the build plugins are added here
     const val androidLibrary = "com.android.library"
     const val kapt = "kotlin-kapt"
-    const val apollo = "com.apollographql.apollo"
+    const val apollo = "com.apollographql.apollo3"
     const val ktlintPlugin = "org.jlleitschuh.gradle.ktlint"
     const val detektPlugin = "io.gitlab.arturbosch.detekt"
     const val dokkaPlugin = "org.jetbrains.dokka"
@@ -104,9 +104,9 @@ object Libraries {
     // Networking - apollo, OKHTTP and loggingInterceptor
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
-    const val apollo = "com.apollographql.apollo:apollo-runtime:${Versions.apolloVersion}"
+    const val apollo = "com.apollographql.apollo3:apollo-runtime:${Versions.apolloVersion}"
     const val apolloCoroutines =
-        "com.apollographql.apollo:apollo-coroutines-support:${Versions.apolloVersion}"
+        "com.apollographql.apollo:apollo-coroutines-support:2.2.0"
     const val ohttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
     const val loggingInterceptor =
         "com.squareup.okhttp3:logging-interceptor:${Versions.loggingInterceptor}"
