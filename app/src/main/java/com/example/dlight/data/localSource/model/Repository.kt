@@ -13,16 +13,10 @@ data class Repository(
     val name: String,
     val description: String,
     val login: String,
-    @SerializedName("forks_count")
     val forksCount: Int ,
-    @SerializedName("full_name")
     val fullName: String,
-    @SerializedName("html_url")
     val htmlUrl: String,
-    @SerializedName("node_id")
     val nodeId: String,
-    @SerializedName("stargazers_count")
     val stargazersCount: Int,
-    @SerializedName("watchers_count")
     val watchersCount: Int
 )

@@ -49,7 +49,8 @@ fun SearchUserScreen() {
         searchValue,
         uiState,
         onUpdateText = { searchValue = it }
-    ) { searchViewModel.searchUserProfile(it) }
+    ) { searchViewModel.searchUserProfile(it)
+        searchViewModel.fetchUserRepos(it) }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -71,9 +72,9 @@ fun SearchUserScreenContent(
         ) {
             SearchBar(textValue, onUpdateText, focusManager, onSearchUser, keyboardController)
             ProfileInfo(searchUserUiState)
-            Timber.e("Repos${searchUserUiState.userProfileUiState.repositories}")
+            Timber.e("Repos${searchUserUiState.userRepositories.size}")
             RepoAndOrganizationCount(searchUserUiState)
-            AccountsInfo()
+            AccountsInfo(searchUserUiState)
         }
     }
 
@@ -222,19 +223,29 @@ fun ProfileUiItem(text: String, icon: ImageVector, modifier: Modifier = Modifier
 @Composable
 fun AccountsInfo(searchUserUiState: SearchUserUiState) {
     Column {
-        LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(listOf("")) {
-                AccountsInfoItem(searchUserUiState)
-            }
-        }
+        AccountsInfoItem("Following",searchUserUiState, searchUserUiState.userProfileUiState.following)
+        AccountsInfoItem("Followers", searchUserUiState,  searchUserUiState.userProfileUiState.followers)
     }
 }
 
 @Composable
-private fun AccountsInfoItem(searchUserUiState: SearchUserUiState) {
-    Card {
-        UserHeader(searchUserUiState = searchUserUiState)
-        DlightText(text = searchUserUiState.userProfileUiState.bio)
+private fun AccountsInfoItem(title: String, searchUserUiState: SearchUserUiState, count: String) {
+    ProfileUiItem(
+        text = "$title ($count)",
+        icon = Icons.Default.Person
+    )
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 20.dp)
+    ) {
+        items(listOf("")) {
+            Card {
+                Column(Modifier.fillMaxWidth()) {
+                    UserHeader(searchUserUiState = searchUserUiState)
+                    DlightText(text = searchUserUiState.userProfileUiState.bio)
+                }
+            }
+        }
     }
 }
 

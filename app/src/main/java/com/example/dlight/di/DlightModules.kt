@@ -10,7 +10,9 @@ import com.example.dlight.data.remoteSource.GitHubApi
 import com.example.dlight.data.repository.impl.UserRepositoryImpl
 import com.example.dlight.data.repository.UserRepository
 import com.example.dlight.domain.FetchUserProfileUseCase
-import com.example.dlight.domain.FetchUserProfileUseCaseImpl
+import com.example.dlight.domain.FetchUserRepositoriesUseCase
+import com.example.dlight.domain.impl.FetchUserProfileUseCaseImpl
+import com.example.dlight.domain.impl.FetchUserRepositoriesUseCaseImpl
 import com.example.dlight.ui.search.SearchViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,7 +27,7 @@ import java.util.concurrent.TimeUnit
 private const val BASE_URL= "https://api.github.com/"
 
 private val repoModule: Module = module {
-    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get(), get()) }
 }
 
 private val databaseModule: Module = module {
@@ -82,10 +84,11 @@ private val daoModule: Module = module {
 
 private val useCaseModule : Module = module {
     single <FetchUserProfileUseCase> { FetchUserProfileUseCaseImpl(get()) }
+    single <FetchUserRepositoriesUseCase> { FetchUserRepositoriesUseCaseImpl(get()) }
 }
 
 private val viewModelModule: Module = module {
-    viewModel { SearchViewModel(get()) }
+    viewModel { SearchViewModel(get(), get()) }
 }
 
 val dlightModules: List<Module> = listOf(
