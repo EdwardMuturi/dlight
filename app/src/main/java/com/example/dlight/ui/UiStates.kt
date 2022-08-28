@@ -7,6 +7,9 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 data class SearchUserUiState(
     val userProfileUiState: UserProfileUiState= UserProfileUiState(),
+    val userRepositories: List<UserRepositoryUiState> = emptyList(),
+    val followers: List<FollowersAndFollowingUiState> = emptyList(),
+    val followings: List<FollowersAndFollowingUiState> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String = String()
 )
@@ -21,6 +24,20 @@ data class UserProfileUiState(
     val followers: String= String(),
     val following: String= String(),
     val repositories: String= String(),
+)
+
+data class UserRepositoryUiState (
+    val name: String,
+    val description: String,
+    val stars: String,
+    val watchers: String
+)
+
+data class FollowersAndFollowingUiState(
+    val avatar: String= String(),
+    val name: String= String(),
+    val userName: String= String(),
+    val bio: String= String(),
 )
 
 @Composable

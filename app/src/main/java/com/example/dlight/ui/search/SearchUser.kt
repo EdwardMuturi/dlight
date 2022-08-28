@@ -5,9 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.dlight.R
 import com.example.dlight.ui.DlightSwipeRefresh
+import com.example.dlight.ui.FollowersAndFollowingUiState
 import com.example.dlight.ui.SearchUserUiState
 import org.koin.androidx.compose.viewModel
 import timber.log.Timber
@@ -49,7 +53,11 @@ fun SearchUserScreen() {
         searchValue,
         uiState,
         onUpdateText = { searchValue = it }
-    ) { searchViewModel.searchUserProfile(it) }
+    ) { searchViewModel.searchUserProfile(it)
+        searchViewModel.fetchUserRepos(it)
+        searchViewModel.fetchUserFollowers(it)
+        searchViewModel.fetchUserFollowing(it)
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -62,18 +70,20 @@ fun SearchUserScreenContent(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState(0)
 
     DlightSwipeRefresh(
         isRefreshingState = searchUserUiState.isLoading,
         onRefreshData = { onSearchUser(textValue.text) }) {
         Column(
-            Modifier.fillMaxSize(),
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
             SearchBar(textValue, onUpdateText, focusManager, onSearchUser, keyboardController)
             ProfileInfo(searchUserUiState)
-            Timber.e("Repos${searchUserUiState.userProfileUiState.repositories}")
             RepoAndOrganizationCount(searchUserUiState)
-            AccountsInfo()
+            AccountsInfo(searchUserUiState)
         }
     }
 
@@ -154,7 +164,7 @@ private fun ProfileInfo(searchUserUiState: SearchUserUiState) {
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 20.dp)
     ) {
-        UserHeader(searchUserUiState)
+        UserHeader(searchUserUiState.userProfileUiState.avatar, searchUserUiState.userProfileUiState.name, searchUserUiState.userProfileUiState.userName)
         DlightText(
             text = searchUserUiState.userProfileUiState.bio,
             modifier = Modifier.fillMaxWidth()
@@ -177,10 +187,10 @@ private fun ProfileInfo(searchUserUiState: SearchUserUiState) {
 }
 
 @Composable
-private fun UserHeader(searchUserUiState: SearchUserUiState) {
+private fun UserHeader(avatar: String, name: String, userName: String) {
     Row(modifier = Modifier.padding(bottom = 20.dp)) {
         Image(
-            painter = rememberImagePainter(searchUserUiState.userProfileUiState.avatar),
+            painter = rememberImagePainter(avatar),
             contentDescription = "Profile photo",
             modifier = Modifier
                 .size(60.dp)
@@ -191,12 +201,12 @@ private fun UserHeader(searchUserUiState: SearchUserUiState) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = searchUserUiState.userProfileUiState.name,
+                text = name,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
             )
             Text(
-                text = searchUserUiState.userProfileUiState.userName,
+                text = userName,
                 fontWeight = FontWeight.Light,
                 fontSize = 16.sp
             )
@@ -221,20 +231,38 @@ fun ProfileUiItem(text: String, icon: ImageVector, modifier: Modifier = Modifier
 
 @Composable
 fun AccountsInfo(searchUserUiState: SearchUserUiState) {
-    Column {
-        LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(listOf("")) {
-                AccountsInfoItem(searchUserUiState)
-            }
-        }
+    Column(modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)) {
+        AccountsInfoItem("Following", searchUserUiState.followings, searchUserUiState.userProfileUiState.following)
+        AccountsInfoItem("Followers", searchUserUiState.followings, searchUserUiState.userProfileUiState.followers)
     }
 }
 
 @Composable
-private fun AccountsInfoItem(searchUserUiState: SearchUserUiState) {
-    Card {
-        UserHeader(searchUserUiState = searchUserUiState)
-        DlightText(text = searchUserUiState.userProfileUiState.bio)
+private fun AccountsInfoItem(
+    title: String,
+    followersAndFollowingUiState: List<FollowersAndFollowingUiState>,
+    count: String) {
+    Column(modifier = Modifier.padding(start = 20.dp, top = 15.dp)){
+        ProfileUiItem(
+            text = "$title ($count)",
+            icon = Icons.Default.Person,
+        )
+    }
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(start = 20.dp, end = 20.dp)
+    ) {
+        items(followersAndFollowingUiState) {
+            Card(
+                Modifier
+                    .size(width = 300.dp, height = 150.dp)
+                    .padding(start = 10.dp)) {
+                Column(Modifier.fillMaxWidth().padding(10.dp)) {
+                    UserHeader(it.avatar, it.name, it.userName)
+                    DlightText(text = it.bio)
+                }
+            }
+        }
     }
 }
 

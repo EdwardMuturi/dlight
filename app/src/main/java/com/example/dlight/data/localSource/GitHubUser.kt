@@ -8,7 +8,7 @@ data class GitHubUser(
     @SerializedName("avatar_url")
     val avatarUrl: String = "",
     @SerializedName("bio")
-    val bio: String = "",
+    val bio: String? = null,
     @SerializedName("blog")
     val blog: String = "",
     @SerializedName("company")
@@ -80,7 +80,7 @@ fun GitHubUser.asUser()= User(
     this.name?: "",
     this.blog,
     this.company?: "",
-    this.bio,
+    this.bio ?: "",
     this.followers,
     this.following,
     this.publicRepos,

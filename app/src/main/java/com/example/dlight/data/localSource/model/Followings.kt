@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Followings(
     @PrimaryKey(autoGenerate = true)
     var id: Long,
-    val userLogin: String,
+//    val userLogin: String,
     val login: String,
     val name: String,
     val avatarUrl: String,
