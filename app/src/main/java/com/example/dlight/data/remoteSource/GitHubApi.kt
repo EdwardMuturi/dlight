@@ -2,6 +2,7 @@ package com.example.dlight.data.remoteSource
 
 import com.example.dlight.data.localSource.GitHubUser
 import com.example.dlight.data.localSource.model.User
+import com.example.dlight.data.remoteSource.model.GitHubFollower
 import com.example.dlight.data.remoteSource.model.GithubRepos
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -17,4 +18,12 @@ interface GitHubApi {
     @Headers("Accept: application/vnd.github.v3.full+json")
     @GET("/users/{username}/repos")
     suspend fun getUserRepositories(@Path("username")  userName:String) : Response<GithubRepos>
+
+    @Headers("Accept: application/vnd.github.v3.full+json")
+    @GET("/users/{username}/followers")
+    suspend fun getUserFollowers(@Path("username")  userName:String) : Response<List<GitHubFollower>>
+
+    @Headers("Accept: application/vnd.github.v3.full+json")
+    @GET("/users/{username}/following")
+    suspend fun getUserFollowing(@Path("username")  userName:String) : Response<List<GitHubFollower>>
 }

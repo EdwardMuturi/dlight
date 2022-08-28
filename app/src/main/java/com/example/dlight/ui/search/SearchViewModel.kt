@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dlight.data.Result
 import com.example.dlight.data.localSource.model.User
+import com.example.dlight.domain.FetchUserFollowersUseCase
+import com.example.dlight.domain.FetchUserFollowingUseCase
 import com.example.dlight.domain.FetchUserProfileUseCase
 import com.example.dlight.domain.FetchUserRepositoriesUseCase
+import com.example.dlight.ui.FollowersAndFollowingUiState
 import com.example.dlight.ui.SearchUserUiState
 import com.example.dlight.ui.UserProfileUiState
 import com.example.dlight.ui.UserRepositoryUiState
@@ -18,7 +21,9 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val fetchUserProfileUseCase: FetchUserProfileUseCase,
-    private val fetchUserRepositoriesUseCase: FetchUserRepositoriesUseCase
+    private val fetchUserRepositoriesUseCase: FetchUserRepositoriesUseCase,
+    private val fetchUserFollowersUseCase: FetchUserFollowersUseCase,
+    private val  fetchUserFollowingUseCase: FetchUserFollowingUseCase
 ) : ViewModel() {
 
     private var _searchUserUiState = MutableStateFlow(SearchUserUiState())
@@ -67,6 +72,35 @@ class SearchViewModel(
                 )
             }
             _searchUserUiState.update { it.copy(userRepositories = repos) }
+        }
+    }
+
+    fun fetchUserFollowing(userName: String) {
+
+        viewModelScope.launch {
+            val follows = fetchUserFollowingUseCase(userName).map {
+                FollowersAndFollowingUiState(
+                    it.avatarUrl,
+                    it.name,
+                    it.login,
+                    it.bioHtml
+                )
+            }
+            _searchUserUiState.update { it.copy(followings = follows ) }
+        }
+    }
+
+    fun fetchUserFollowers(userName: String) {
+        viewModelScope.launch {
+            val followers = fetchUserFollowersUseCase(userName).map {
+                FollowersAndFollowingUiState(
+                    it.avatarUrl,
+                    it.name,
+                    it.login,
+                    it.bioHtml
+                )
+            }
+            _searchUserUiState.update { it.copy(followers = followers) }
         }
     }
 }

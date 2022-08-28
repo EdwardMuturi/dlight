@@ -7,6 +7,6 @@ import com.example.dlight.data.localSource.model.Followings
 @Dao
 interface FollowingDao : BaseDao<Followings> {
 
-    @Query("SELECT * FROM Followings WHERE userLogin =:userLogin")
+    @Query("SELECT * FROM Followings WHERE login =:userLogin")
     suspend fun getFollowingByGithubUsername(userLogin: String): List<Followings>
 }
