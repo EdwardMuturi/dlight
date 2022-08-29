@@ -12,9 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -81,9 +79,17 @@ fun SearchUserScreenContent(
                 .verticalScroll(scrollState)
         ) {
             SearchBar(textValue, onUpdateText, focusManager, onSearchUser, keyboardController)
-            ProfileInfo(searchUserUiState)
-            RepoAndOrganizationCount(searchUserUiState)
-            AccountsInfo(searchUserUiState)
+            when(!searchUserUiState.isLoading && searchUserUiState.userProfileUiState.userName.isEmpty()){
+                true -> {
+                    Text(text = "Type user name on search bar to see results", fontSize = 20.sp, fontWeight = FontWeight.Light)
+                }
+                false -> {
+                    ProfileInfo(searchUserUiState)
+                    RepoAndOrganizationCount(searchUserUiState)
+                    AccountsInfo(searchUserUiState)
+                }
+            }
+
         }
     }
 
@@ -169,20 +175,19 @@ private fun ProfileInfo(searchUserUiState: SearchUserUiState) {
             text = searchUserUiState.userProfileUiState.bio,
             modifier = Modifier.fillMaxWidth()
         )
-        if (searchUserUiState.userProfileUiState.organization.isNotEmpty()
-            || searchUserUiState.userProfileUiState.blog.isNotEmpty()
-        ) {
+        if (searchUserUiState.userProfileUiState.organization.isNotEmpty())
             ProfileUiItem(
                 text = searchUserUiState.userProfileUiState.organization,
                 Icons.Default.Person
             )
-            ProfileUiItem(
+        if (searchUserUiState.userProfileUiState.blog.isNotEmpty())
+        ProfileUiItem(
                 text = searchUserUiState.userProfileUiState.blog,
-                Icons.Default.AccountBox
+                Icons.Default.Link
             )
-        }
-        ProfileUiItem(text = searchUserUiState.userProfileUiState.followers, Icons.Default.Person)
-        ProfileUiItem(text = searchUserUiState.userProfileUiState.following, Icons.Default.Share)
+
+        ProfileUiItem(text = "${stringResource(R.string.text_followers)} ${searchUserUiState.userProfileUiState.followers}", Icons.Default.Groups)
+        ProfileUiItem(text = "${stringResource(R.string.text_following)} ${searchUserUiState.userProfileUiState.following}", Icons.Default.Group)
     }
 }
 
@@ -231,9 +236,11 @@ fun ProfileUiItem(text: String, icon: ImageVector, modifier: Modifier = Modifier
 
 @Composable
 fun AccountsInfo(searchUserUiState: SearchUserUiState) {
-    Column(modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)) {
-        AccountsInfoItem("Following", searchUserUiState.followings, searchUserUiState.userProfileUiState.following)
-        AccountsInfoItem("Followers", searchUserUiState.followings, searchUserUiState.userProfileUiState.followers)
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 20.dp)) {
+        AccountsInfoItem(stringResource(R.string.text_following), searchUserUiState.followings, searchUserUiState.userProfileUiState.following, Icons.Default.Groups)
+        AccountsInfoItem(stringResource(R.string.text_followers), searchUserUiState.followings, searchUserUiState.userProfileUiState.followers, Icons.Default.Group)
     }
 }
 
@@ -241,11 +248,12 @@ fun AccountsInfo(searchUserUiState: SearchUserUiState) {
 private fun AccountsInfoItem(
     title: String,
     followersAndFollowingUiState: List<FollowersAndFollowingUiState>,
-    count: String) {
+    count: String,
+icon: ImageVector) {
     Column(modifier = Modifier.padding(start = 20.dp, top = 15.dp)){
         ProfileUiItem(
             text = "$title ($count)",
-            icon = Icons.Default.Person,
+            icon = icon,
         )
     }
     LazyRow(
@@ -257,7 +265,10 @@ private fun AccountsInfoItem(
                 Modifier
                     .size(width = 300.dp, height = 150.dp)
                     .padding(start = 10.dp)) {
-                Column(Modifier.fillMaxWidth().padding(10.dp)) {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)) {
                     UserHeader(it.avatar, it.name, it.userName)
                     DlightText(text = it.bio)
                 }
