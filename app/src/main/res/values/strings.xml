@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Dlight</string>
+    <string name="search_user">Search user</string>
+    <string name="text_repositories">Repositories</string>
+    <string name="text_organizations">Organizations</string>
+    <string name="text_following">Following</string>
+    <string name="text_followers">Followers</string>
 </resources>
